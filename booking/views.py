@@ -64,4 +64,26 @@ class BookView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
+class CancelView(APIView):
+    """
+    API view for cancelling a reservation.
+    """
+    permission_classes = [IsAuthenticated]
 
+    def post(self, request, reservation_id):
+        try:
+            reservation = Reservation.objects.get(id=reservation_id, user=request.user, is_cancelled=False)
+        except Reservation.DoesNotExist:
+            return Response({"error": "Reservation not found or already cancelled."},
+                            status=status.HTTP_404_NOT_FOUND)
+
+        # Mark the reservation as cancelled
+        reservation.is_cancelled = True
+        reservation.save()
+
+        # Make the table available again
+        table = reservation.table
+        table.is_available = True
+        table.save()
+
+        return Response({"message": "Reservation cancelled successfully."}, status=status.HTTP_200_OK)
