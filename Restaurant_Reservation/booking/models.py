@@ -1,4 +1,5 @@
 from django.db import models
+from django.core import validators
 from django.contrib.auth.models import User
 
 SEAT_COST = 10  # Example seat cost
@@ -13,8 +14,8 @@ class Table(models.Model):
     """
     table_number = models.IntegerField(unique=True)
     seats = models.IntegerField(validators=[
-        models.validators.MinValueValidator(MIN_SEATS_PER_TABLE),
-        models.validators.MaxValueValidator(MAX_SEATS_PER_TABLE)
+        validators.MinValueValidator(MIN_SEATS_PER_TABLE),
+        validators.MaxValueValidator(MAX_SEATS_PER_TABLE)
     ])
     is_available = models.BooleanField(default=True)
 
