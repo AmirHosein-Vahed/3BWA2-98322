@@ -1,6 +1,11 @@
 from django.db import models
 from django.contrib.auth.models import User
 
+SEAT_COST = 10  # Example seat cost
+MIN_SEATS_PER_TABLE = 4
+MAX_SEATS_PER_TABLE = 10
+TOTAL_TABLES = 10 # As per the document
+
 # Create your models here.
 class Table(models.Model):
     """
@@ -8,8 +13,8 @@ class Table(models.Model):
     """
     table_number = models.IntegerField(unique=True)
     seats = models.IntegerField(validators=[
-        models.validators.MinValueValidator(4),
-        models.validators.MaxValueValidator(10)
+        models.validators.MinValueValidator(MIN_SEATS_PER_TABLE),
+        models.validators.MaxValueValidator(MAX_SEATS_PER_TABLE)
     ])
     is_available = models.BooleanField(default=True)
 
